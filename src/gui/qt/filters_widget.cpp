@@ -34,7 +34,7 @@
 #include "gui/state/logging.h"
 
 namespace loot {
-FiltersWidget::FiltersWidget(QWidget* parent) : QWidget(parent) { setupUi(); }
+FiltersWidget::FiltersWidget(QWidget* parent) : QFrame(parent) { setupUi(); }
 
 void FiltersWidget::setPlugins(const std::vector<std::string>& pluginNames) {
   setComboBoxItems(conflictingPluginsFilter, pluginNames);
@@ -131,21 +131,16 @@ void FiltersWidget::setupUi() {
 
   auto verticalSpacer = new QSpacerItem(SPACER_WIDTH,
                                         SPACER_HEIGHT,
-                                        QSizePolicy::Minimum,
+                                        QSizePolicy::Preferred,
                                         QSizePolicy::Expanding);
 
   auto divider = new QFrame(this);
+  divider->setObjectName("divider");
   divider->setFrameShape(QFrame::HLine);
   divider->setFrameShadow(QFrame::Sunken);
 
   auto hiddenPluginsBox = new QHBoxLayout();
-  hiddenPluginsLabel = new QLabel(this);
-  hiddenPluginsCountLabel = new QLabel(this);
-
   auto hiddenMessagesBox = new QHBoxLayout();
-  hiddenMessagesLabel = new QLabel(this);
-  hiddenMessagesCountLabel = new QLabel(this);
-
   auto verticalLayout = new QVBoxLayout(this);
 
   const auto leftMargin = style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
@@ -321,6 +316,10 @@ void FiltersWidget::on_groupPluginsFilter_activated() {
 
 void FiltersWidget::on_contentFilter_textEdited() {
   emit pluginFilterChanged(getPluginFiltersState());
+}
+
+void FiltersWidget::on_contentFilter_textChanged() {
+  contentFilter->style()->polish(contentFilter);
 }
 
 void FiltersWidget::on_contentRegexCheckbox_stateChanged() {

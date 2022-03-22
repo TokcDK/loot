@@ -77,11 +77,35 @@
 namespace loot {
 class MainWindow : public QMainWindow {
   Q_OBJECT
+  Q_PROPERTY(QColor normalIconColor MEMBER normalIconColor NOTIFY
+                 normalIconColorChanged)
+  Q_PROPERTY(QColor disabledIconColor MEMBER disabledIconColor NOTIFY
+                 disabledIconColorChanged)
+  Q_PROPERTY(QColor selectedIconColor MEMBER selectedIconColor NOTIFY
+                 selectedIconColorChanged)
+  Q_PROPERTY(QColor selectedSidebarPluginTextColor MEMBER
+                 selectedSidebarPluginTextColor NOTIFY
+                     selectedSidebarPluginTextColorChanged)
+  Q_PROPERTY(QColor unselectedSidebarPluginGroupColor MEMBER
+                 unselectedSidebarPluginGroupColor NOTIFY
+                     unselectedSidebarPluginGroupColorChanged)
+  Q_PROPERTY(QColor linkColor MEMBER linkColor NOTIFY linkColorChanged)
 
 public:
   explicit MainWindow(LootState &state, QWidget *parent = nullptr);
 
   void initialise();
+  void applyTheme();
+
+signals:
+  void normalIconColorChanged();
+  void disabledIconColorChanged();
+  void selectedIconColorChanged();
+
+  void selectedSidebarPluginTextColorChanged();
+  void unselectedSidebarPluginGroupColorChanged();
+
+  void linkColorChanged();
 
 private:
   LootState &state;
@@ -147,6 +171,15 @@ private:
 
   std::optional<QPersistentModelIndex> lastEnteredCardIndex;
 
+  QColor normalIconColor;
+  QColor disabledIconColor;
+  QColor selectedIconColor;
+
+  QColor selectedSidebarPluginTextColor;
+  QColor unselectedSidebarPluginGroupColor;
+
+  QColor linkColor;
+
   std::vector<std::string> themes;
 
   void setupUi();
@@ -155,6 +188,7 @@ private:
   void setupViews();
 
   void translateUi();
+  void setIcons();
 
   void enableGameActions();
   void disableGameActions();
@@ -292,6 +326,10 @@ private slots:
   void handleGetTagCommitResponseFinished();
   void handleUpdateCheckNetworkError(QNetworkReply::NetworkError error);
   void handleUpdateCheckSSLError(const QList<QSslError> &errors);
+
+  void handleIconColorChanged();
+  void handleSidebarTextColorChanged();
+  void handleLinkColorChanged();
 };
 }
 
